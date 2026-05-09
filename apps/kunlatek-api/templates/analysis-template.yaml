@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: {{ .Values.app.name }}-health
+  namespace: {{ .Values.app.namespace }}
+spec:
+  metrics:
+    - name: success-rate
+      interval: 30s
+      count: 4
+      successCondition: result[0] >= 0.99
+      failureLimit: 1
+      provider:
+        web:
+          url: "http://{{ .Values.app.name }}-canary.{{ .Values.app.namespace }}.svc.cluster.local:{{ .Values.app.port }}{{ .Values.app.probes.readiness.path }}"
+          jsonPath: "{$.status}"
+          timeoutSeconds: 10

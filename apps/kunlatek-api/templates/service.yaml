@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.app.name }}
+  name: {{ .Values.app.name }}-stable
   namespace: {{ .Values.app.namespace }}
 spec:
   selector:
@@ -9,4 +9,15 @@ spec:
   ports:
     - port: 80
       targetPort: {{ .Values.app.port }}
-  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.app.name }}-canary
+  namespace: {{ .Values.app.namespace }}
+spec:
+  selector:
+    app: {{ .Values.app.name }}
+  ports:
+    - port: 80
+      targetPort: {{ .Values.app.port }}

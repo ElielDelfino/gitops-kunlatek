@@ -1,5 +1,5 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
   name: {{ .Values.app.name }}
   namespace: {{ .Values.app.namespace }}
@@ -59,3 +59,20 @@ spec:
               port: {{ .Values.app.port }}
             initialDelaySeconds: {{ .Values.app.probes.liveness.initialDelaySeconds }}
             periodSeconds: {{ .Values.app.probes.liveness.periodSeconds }}
+  strategy:
+    canary:
+      canaryService: {{ .Values.app.name }}-canary
+      stableService: {{ .Values.app.name }}-stable
+      analysis:
+        templates:
+          - templateName: {{ .Values.app.name }}-health
+        startingStep: 1
+      steps:
+        - setWeight: 20
+        - pause: { duration: 2m }
+        - analysis:
+            templates:
+              - templateName: {{ .Values.app.name }}-health
+        - setWeight: 50
+        - pause: { duration: 2m }
+        - setWeight: 100
