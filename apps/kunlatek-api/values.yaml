@@ -1,6 +1,6 @@
 image:
-  repository: "890871562295.dkr.ecr.us-east-1.amazonaws.com/kunlatek-app-backend"
-  tag: "latest"    # atualizado automaticamente pelo CI a cada deploy
+  repository: 890871562295.dkr.ecr.us-east-1.amazonaws.com/kunlatek-app-backend
+  tag: "0.1.0-5dc13e8"
 
 app:
   name: kunlatek-api
