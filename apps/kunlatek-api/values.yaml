@@ -1,0 +1,65 @@
+image:
+  repository: "890871562295.dkr.ecr.us-east-1.amazonaws.com/kunlatek-app-backend"
+  tag: "latest"    # atualizado automaticamente pelo CI a cada deploy
+
+app:
+  name: kunlatek-api
+  namespace: kunlatek
+  replicas: 2
+  port: 3000
+  serviceAccountName: kunlatek-api-sa
+  irsaRoleArn: "arn:aws:iam::890871562295:role/kunlatek-eks-app-sa-role"
+  secretProviderClassName: kunlatek-api-secrets
+  secretName: kunlatek-api-secret
+
+  resources:
+    requests:
+      cpu: "250m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+
+  probes:
+    readiness:
+      path: /
+      initialDelaySeconds: 10
+      periodSeconds: 10
+    liveness:
+      path: /
+      initialDelaySeconds: 30
+      periodSeconds: 15
+
+  hpa:
+    minReplicas: 2
+    maxReplicas: 6
+    cpuUtilization: 70
+    memoryUtilization: 80
+
+worker:
+  name: kunlatek-worker
+  replicas: 1
+  command: ["node", "dist/worker"]
+
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "250m"
+      memory: "256Mi"
+
+  hpa:
+    minReplicas: 1
+    maxReplicas: 4
+    cpuUtilization: 70
+
+ingress:
+  scheme: internet-facing
+  targetType: ip
+
+datadog:
+  env: dev
+
+networkPolicy:
+  vpcCidr: "10.0.0.0/16"

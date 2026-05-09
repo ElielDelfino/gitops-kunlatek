@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kunlatek-api
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/elieldelfino/gitops-kunlatek
+    targetRevision: main
+    path: apps/kunlatek-api
+    helm:
+      valueFiles:
+        - values.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kunlatek
+
+  syncPolicy:
+    automated:
+      prune: true      # deleta recursos removidos do git
+      selfHeal: true   # reverte mudanças manuais no cluster
+    syncOptions:
+      - CreateNamespace=true

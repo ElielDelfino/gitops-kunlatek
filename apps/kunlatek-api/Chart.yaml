@@ -1,0 +1,6 @@
+apiVersion: v2
+name: kunlatek-api
+description: Helm Chart da aplicação kunlatek-api no EKS
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

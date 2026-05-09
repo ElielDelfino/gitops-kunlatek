@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.worker.name }}
+  namespace: {{ .Values.app.namespace }}
+  labels:
+    app: {{ .Values.worker.name }}
+spec:
+  replicas: {{ .Values.worker.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.worker.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.worker.name }}
+        tags.datadoghq.com/env: {{ .Values.datadog.env }}
+        tags.datadoghq.com/service: {{ .Values.worker.name }}
+        tags.datadoghq.com/version: {{ .Values.image.tag | quote }}
+      annotations:
+        admission.datadoghq.com/enabled: "true"
+    spec:
+      serviceAccountName: {{ .Values.app.serviceAccountName }}
+      volumes:
+        - name: secrets-store
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: {{ .Values.app.secretProviderClassName }}
+      containers:
+        - name: {{ .Values.worker.name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          command: {{ .Values.worker.command | toJson }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.app.secretName }}
+          volumeMounts:
+            - name: secrets-store
+              mountPath: /mnt/secrets
+              readOnly: true
+          resources:
+            requests:
+              cpu: {{ .Values.worker.resources.requests.cpu }}
+              memory: {{ .Values.worker.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.worker.resources.limits.cpu }}
+              memory: {{ .Values.worker.resources.limits.memory }}
