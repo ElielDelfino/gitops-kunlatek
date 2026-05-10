@@ -21,13 +21,6 @@ spec:
         admission.datadoghq.com/enabled: "true"
     spec:
       serviceAccountName: {{ .Values.app.serviceAccountName }}
-      volumes:
-        - name: secrets-store
-          csi:
-            driver: secrets-store.csi.k8s.io
-            readOnly: true
-            volumeAttributes:
-              secretProviderClass: {{ .Values.app.secretProviderClassName }}
       containers:
         - name: {{ .Values.worker.name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -35,10 +28,6 @@ spec:
           envFrom:
             - secretRef:
                 name: {{ .Values.app.secretName }}
-          volumeMounts:
-            - name: secrets-store
-              mountPath: /mnt/secrets
-              readOnly: true
           resources:
             requests:
               cpu: {{ .Values.worker.resources.requests.cpu }}
