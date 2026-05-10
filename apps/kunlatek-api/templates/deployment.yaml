@@ -52,16 +52,9 @@ spec:
     canary:
       canaryService: {{ .Values.app.name }}-canary
       stableService: {{ .Values.app.name }}-stable
-      analysis:
-        templates:
-          - templateName: {{ .Values.app.name }}-health
-        startingStep: 1
       steps:
         - setWeight: 20
-        - pause: { duration: 2m }
-        - analysis:
-            templates:
-              - templateName: {{ .Values.app.name }}-health
+        - pause: { duration: 30s }
         - setWeight: 50
-        - pause: { duration: 2m }
+        - pause: { duration: 30s }
         - setWeight: 100
