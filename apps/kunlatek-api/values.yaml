@@ -52,7 +52,7 @@ worker:
   hpa:
     minReplicas: 1
     maxReplicas: 4
-    cpuUtilization: 70
+    cpuUtilization: 90
 
 ingress:
   scheme: internet-facing

@@ -36,6 +36,11 @@ spec:
     name: {{ .Values.worker.name }}
   minReplicas: {{ .Values.worker.hpa.minReplicas }}
   maxReplicas: {{ .Values.worker.hpa.maxReplicas }}
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+    scaleUp:
+      stabilizationWindowSeconds: 120
   metrics:
     - type: Resource
       resource:
