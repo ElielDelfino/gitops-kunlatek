@@ -1,6 +1,6 @@
 image:
   repository: 890871562295.dkr.ecr.us-east-1.amazonaws.com/kunlatek-app-backend
-  tag: "0.1.0-96a9dcd"
+  tag: "0.1.0-72036d7"
 
 app:
   name: kunlatek-api
