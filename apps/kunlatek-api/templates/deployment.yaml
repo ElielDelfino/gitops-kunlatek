@@ -21,6 +21,10 @@ spec:
         admission.datadoghq.com/enabled: "true"
     spec:
       serviceAccountName: {{ .Values.app.serviceAccountName }}
+      tolerations:
+        - key: role
+          value: app
+          effect: NoSchedule
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname

@@ -21,6 +21,10 @@ spec:
         admission.datadoghq.com/enabled: "true"
     spec:
       serviceAccountName: {{ .Values.app.serviceAccountName }}
+      tolerations:
+        - key: role
+          value: app
+          effect: NoSchedule
       containers:
         - name: {{ .Values.worker.name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
