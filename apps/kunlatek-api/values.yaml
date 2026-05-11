@@ -1,6 +1,6 @@
 image:
   repository: 890871562295.dkr.ecr.us-east-1.amazonaws.com/kunlatek-app-backend
-  tag: "0.1.0-e938f4b"
+  tag: "0.1.0-479198d"
 
 app:
   name: kunlatek-api
@@ -40,7 +40,7 @@ worker:
   name: kunlatek-worker
   replicas: 1
   command: ["node", "dist/worker"]
-  sqsUrl: ""  # preenchido pelo CI após terraform output sqs_worker_url
+  sqsUrl: "https://sqs.us-east-1.amazonaws.com/890871562295/kunlatek-eks-worker"
 
   resources:
     requests:
