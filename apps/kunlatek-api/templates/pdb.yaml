@@ -1,0 +1,14 @@
+# Ensures at least 1 API replica stays up during voluntary disruptions
+# (node drain, SPOT interruption handling, rolling updates).
+# Prevents the scheduler from evicting all pods simultaneously,
+# which would cause a full outage instead of a brief degradation.
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ .Values.app.name }}-pdb
+  namespace: {{ .Values.app.namespace }}
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.app.name }}
