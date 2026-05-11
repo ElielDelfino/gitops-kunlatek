@@ -28,6 +28,8 @@ spec:
           envFrom:
             - secretRef:
                 name: {{ .Values.app.secretName }}
+            - configMapRef:
+                name: {{ .Values.worker.name }}-config
           resources:
             requests:
               cpu: {{ .Values.worker.resources.requests.cpu }}

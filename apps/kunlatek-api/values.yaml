@@ -40,6 +40,7 @@ worker:
   name: kunlatek-worker
   replicas: 1
   command: ["node", "dist/worker"]
+  sqsUrl: ""  # preenchido pelo CI após terraform output sqs_worker_url
 
   resources:
     requests:
